@@ -1,0 +1,118 @@
+CREATE OR REPLACE procedure SCOTT.proc_member_option(p_uid in varchar2,p_uname in varchar2,
+                                                                                        p_unick in varchar2,p_ugen in varchar2,p_upw in varchar2,
+                                                                                        p_uhp in varchar2,p_upro in varchar2,p_uback in varchar2,
+                                                                                        p_option in number, msg out varchar2)
+                                                                                        
+is
+
+/*
+MEM_ID   
+MEM_NAME   
+MEM_NICK  
+MEM_GENDER  
+MEM_PW 
+MEM_HP 
+MEM_PROFILE    
+MEM_BACKGROUND  
+*/
+    mem_list MEMBER   %rowtype;--멤버테이블변수(오브젝트)
+    v_option number;
+    v_uno number;
+    v_ID varchar2(50);   
+    v_NAME  varchar2(50); 
+    v_NICK  varchar2(350);
+    v_GENDER  varchar2(10);
+    v_PW varchar2(10);
+    v_HP varchar2(50);
+    v_PROFILE    varchar2(150);
+    v_BACKGROUND  varchar2(150);
+
+        cursor c_memlist
+        is
+        select MEM_NO,MEM_ID,MEM_NAME,MEM_NICK,MEM_GENDER,MEM_PW,MEM_HP,MEM_PROFILE,MEM_BACKGROUND
+        from MEMBER;
+begin
+       
+    open c_memlist;
+                 fetch c_memlist into mem_list.MEM_NO,
+                                                  mem_list.MEM_ID,
+                                                  mem_list.MEM_NAME,
+                                                  mem_list.MEM_NICK,
+                                                  mem_list.MEM_GENDER,
+                                                  mem_list.MEM_PW,
+                                                  mem_list.MEM_HP,
+                                                  mem_list.MEM_PROFILE,
+                                                  mem_list.MEM_BACKGROUND;
+    v_uno       :=  mem_list.MEM_NO;                                          
+    v_ID        :=  p_uid;
+    v_NAME      :=  p_uname;
+    v_NICK      :=  p_unick;
+    v_GENDER    :=  p_ugen;
+    v_PW        :=  p_upw;
+    v_HP        :=  p_uhp;
+    v_PROFILE   :=  p_upro;
+    v_BACKGROUND:=  p_uback;
+    v_option    :=  p_option;
+
+    if(v_option =1) then--회원가입
+      insert into MEMBER  (MEM_NO,MEM_ID,MEM_NAME,MEM_GENDER,MEM_PW,MEM_HP)
+                        values(seq_member.nextval,p_uid,p_uname,p_ugen,p_upw,p_uhp);
+      msg := '가입이 완료되었습니다.';
+    end if;
+       if(v_option=2) then--회원정보수정
+        select mem_no into v_uno from member where mem_id = p_uid; 
+        
+        update MEMBER
+            set MEM_NAME = p_uname
+        where MEM_NO =v_uno;
+        
+        update MEMBER
+            set MEM_NICK = p_unick
+        where MEM_NO =v_uno;      
+        
+        update MEMBER
+            set MEM_GENDER = p_ugen
+        where MEM_NO =v_uno;
+        
+        update MEMBER
+            set MEM_HP = p_uhp
+        where MEM_NO =v_uno; 
+        
+        update MEMBER
+            set MEM_PW = p_upw
+        where MEM_NO =v_uno;
+        
+        if(p_upro is null) then
+            select mem_profile into v_PROFILE from member where mem_no = v_uno; 
+        
+            update MEMBER
+                set MEM_PROFILE = v_PROFILE
+            where MEM_NO =v_uno;
+     
+        else
+            update MEMBER
+                set MEM_PROFILE = p_upro
+            where MEM_NO =v_uno;
+        
+        end if;
+        
+        if(p_uback is null) then
+            select MEM_BACKGROUND into v_BACKGROUND from member where mem_no = v_uno;
+         
+            update MEMBER
+                set MEM_BACKGROUND = v_BACKGROUND
+            where MEM_NO =v_uno;
+        
+        else
+            update MEMBER
+                set MEM_BACKGROUND = p_uback
+            where MEM_NO =v_uno;
+        end if;
+        
+        msg := '정보가 수정되었습니다.';
+       end if;
+
+    close c_memlist;
+    commit;
+end;
+/

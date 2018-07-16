@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>로그인</title>
+<!-- 자바스크립트 영역 -->
+<script type = "text/javascript">
+	var i = 10;
+	function login(mem_id){
+		console.log("login호출"+mem_id.value);
+		//alert("로그인 호출 성공");
+	}
+</script>	
+<!-- CSS 영역 -->
+</head>
+<body>
+<!-- 여기에 작성된 내용만 화면에서 출력이 가능함. 
+자바스크립트에서 제공하는 내장객체(변수와 함수제공)를 이용하면 html태그에 접근할 수 있다.
+--> 
+
+<input type ="text" id="mem_id" 
+onclick="login(document.getElementById('mem_id'))">
+<br>
+여기에 구글 로고 이미지 출력
+<br>
+<a href = "http://www.google.co.kr">
+<IMG src="../images/googlelogo.png"
+			 width="150px"height="70px"></a>
+<br>
+박초롱			 
+<!--<IMG src="http://192.168.0.231:9000/images/googlelogo.png"
+			 width="150px"height="70px"></a>-->
+<!-- input태그,text노트,img태그는 줄바꿈 처리가 안된다.--인라인타입 -->
+<!-- insert here-->
+<br>
+<a href ="http://news.chosun.com/site/data/html_dir/2018/05/27/2018052702674.html">
+<IMG src="../images/worldcup.png"
+			 width="150px"height="70px"></a>
+<br>			   			 
+↑여기 눌러봐			 
+</body>
+</html>

@@ -1,0 +1,78 @@
+CREATE OR REPLACE procedure SCOTT.proc_friend_option(p_uid in varchar2, p_fid in varchar2,p_option in number, msg out varchar2)
+                                                                                        
+is
+
+/*
+MEM_ID   
+MEM_NAME   
+MEM_NICK  
+MEM_GENDER  
+MEM_PW 
+MEM_HP 
+MEM_PROFILE    
+MEM_BACKGROUND  
+*/
+    mem_list MEMBER   %rowtype;--멤버테이블변수(오브젝트)
+    fri_list FRIEND  %rowtype;
+    v_option number;
+    v_uno number;
+    v_uid varchar2(30);
+    v_fno number;
+    v_fname varchar2(30);
+    vc_fno number;
+
+        cursor c_memlist
+        is
+        select MEM_NO,MEM_ID,MEM_NAME,MEM_NICK,MEM_GENDER,MEM_PW,MEM_HP,MEM_PROFILE,MEM_BACKGROUND
+        from MEMBER;
+        
+        
+        cursor c_frilist
+        is
+        select FRI_SEQ,FRI_NO,MEM_NO,FRIEND_NAME
+        from FRIEND;
+begin
+       
+    open c_memlist;
+                 fetch c_memlist into mem_list.MEM_NO,
+                                                  mem_list.MEM_ID,
+                                                  mem_list.MEM_NAME,
+                                                  mem_list.MEM_NICK,
+                                                  mem_list.MEM_GENDER,
+                                                  mem_list.MEM_PW,
+                                                  mem_list.MEM_HP,
+                                                  mem_list.MEM_PROFILE,
+                                                  mem_list.MEM_BACKGROUND;
+    open c_frilist;
+                 fetch c_frilist into fri_list.FRI_SEQ,
+                                                 fri_list.FRI_NO,
+                                                 fri_list.MEM_NO,
+                                                 fri_list.FRIEND_NAME; 
+                 
+    v_uid :=p_uid;
+    v_option := p_option;
+    
+    select mem_no,mem_name into v_fno,v_fname from member where mem_id = p_fid;
+    
+    select mem_no into v_uno from member where mem_id = p_uid;
+    
+   -- select count(fri_no) into vc_fno from FRIEND where mem_no = v_uno and fri_no = v_fno group by fri_no;
+    
+    if(v_option =4) then--친구추가
+     
+             insert into FRIEND  (FRI_SEQ,FRI_NO,MEM_NO,FRIEND_NAME)
+            values(seq_friend.nextval,v_fno,v_uno,v_fname);
+            msg := '추가되었습니다.';
+      end if;
+
+       if(v_option=5) then--친구삭제
+        DELETE FRIEND WHERE mem_no = v_uno and fri_no =v_fno; 
+        msg := '삭제되었습니다.';
+          end if;
+    
+     close c_memlist;
+     close c_frilist;
+    commit;
+   
+end;
+/

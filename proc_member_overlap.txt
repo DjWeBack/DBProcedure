@@ -1,0 +1,40 @@
+CREATE OR REPLACE procedure SCOTT.proc_member_overlap(p_uid in varchar2, msg out number)
+                                                                                        
+is
+
+    mem_list MEMBER   %rowtype;--멤버테이블변수(오브젝트)
+    v_ID varchar2(50);   
+    v_count number;
+
+        cursor c_memlist
+        is
+        select MEM_NO,MEM_ID,MEM_NAME,MEM_NICK,MEM_GENDER,MEM_PW,MEM_HP,MEM_PROFILE,MEM_BACKGROUND
+        from MEMBER;
+begin
+       
+    open c_memlist;
+                 fetch c_memlist into mem_list.MEM_NO,
+                                                  mem_list.MEM_ID,
+                                                  mem_list.MEM_NAME,
+                                                  mem_list.MEM_NICK,
+                                                  mem_list.MEM_GENDER,
+                                                  mem_list.MEM_PW,
+                                                  mem_list.MEM_HP,
+                                                  mem_list.MEM_PROFILE,
+                                                  mem_list.MEM_BACKGROUND;
+    v_ID :=p_uid;
+    select count(mem_id) into v_count from member where mem_id = p_uid;
+
+
+    if(v_count =1) then-- 중복
+       msg := '1';
+        end if;
+       if(v_count=0) then--중복아님
+       msg := '0';
+          end if;
+
+     close c_memlist;
+
+   
+end;
+/

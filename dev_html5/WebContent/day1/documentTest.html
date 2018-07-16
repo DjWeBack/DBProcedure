@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body>
+<script type = "text/javascript">
+	document.write("<b>내장객체</b>document에 대해서...");//브라우저에 출력하기
+	document.write("<table border='1' width='350px'>");
+	document.write("<tr>");
+	document.write("<td align='center'>이름 </td><td align='center'>출생년도</td>");
+	document.write("</tr>");
+	/*반복문*/
+	var births = new Array("1987년","1991년","1993년");
+	for(var i=0;i<3;i++){
+		document.write("<tr>");
+		document.write("<td align='center'>"+i+" </td><td align='center'>"+births+"</td>");
+		document.write("</tr>");
+	}//html에서는 반목문 못쓰지만 자바로 걸수 있다.
+	/* */
+		document.write("</table>");
+	
+</script>
+</body>
+</html>
